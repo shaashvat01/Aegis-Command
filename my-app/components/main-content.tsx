@@ -2,6 +2,7 @@ import IndividualMetrics from "./individual-metrics"
 import SquadHealthOverview from "./squad-health-overview"
 import AIChatInterface from "./ai-chat-interface"
 import RealTimeHealthMetrics from "./real-time-health-metrics"
+import ZoomVideoCall from "./zoom-video-call"
 
 export default function MainContent() {
   return (
@@ -10,6 +11,7 @@ export default function MainContent() {
         <RealTimeHealthMetrics />
         <IndividualMetrics />
         <SquadHealthOverview />
+        <ZoomVideoCall />
         <AIChatInterface />
       </div>
     </main>
