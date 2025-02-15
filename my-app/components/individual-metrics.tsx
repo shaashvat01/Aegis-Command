@@ -3,12 +3,12 @@
 import { useState, useEffect } from "react"
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts"
 
-// Dummy data generator
+// Function to generate dummy data with valid initial types
 const generateDummyData = () => ({
-  heartRate: Math.floor(Math.random() * (100 - 60 + 1) + 60),
-  steps: Math.floor(Math.random() * (10000 - 5000 + 1) + 5000),
-  sleepQuality: Math.floor(Math.random() * (100 - 50 + 1) + 50),
-  performanceScore: Math.floor(Math.random() * (100 - 70 + 1) + 70),
+  heartRate: 0,  // Default to 0 instead of undefined
+  steps: 0,
+  sleepQuality: 0,
+  performanceScore: 0,
 })
 
 const generateChartData = () => {
@@ -16,7 +16,7 @@ const generateChartData = () => {
   for (let i = 0; i < 10; i++) {
     data.push({
       time: `${i}:00`,
-      heartRate: Math.floor(Math.random() * (100 - 60 + 1) + 60),
+      heartRate: 0,  // Ensure initial heart rate is a number
     })
   }
   return data
@@ -27,19 +27,26 @@ export default function IndividualMetrics() {
   const [chartData, setChartData] = useState(generateChartData())
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      setMetrics(generateDummyData())
-      setChartData((prevData) => {
-        const newData = [
-          ...prevData.slice(1),
-          {
-            time: `${new Date().getHours()}:${String(new Date().getMinutes()).padStart(2, "0")}`,
-            heartRate: Math.floor(Math.random() * (100 - 60 + 1) + 60),
-          },
-        ]
-        return newData
-      })
-    }, 5000)
+    const fetchData = () => ({
+      heartRate: Math.floor(Math.random() * (100 - 60 + 1) + 60),
+      steps: Math.floor(Math.random() * (10000 - 5000 + 1) + 5000),
+      sleepQuality: Math.floor(Math.random() * (100 - 50 + 1) + 50),
+      performanceScore: Math.floor(Math.random() * (100 - 70 + 1) + 70),
+    })
+
+    const updateData = () => {
+      setMetrics(fetchData())
+      setChartData((prevData) => [
+        ...prevData.slice(1),
+        {
+          time: `${new Date().getHours()}:${String(new Date().getMinutes()).padStart(2, "0")}`,
+          heartRate: Math.floor(Math.random() * (100 - 60 + 1) + 60), // Ensure heartRate is always a number
+        },
+      ])
+    }
+
+    updateData() // Fetch initial client-side data
+    const interval = setInterval(updateData, 5000)
 
     return () => clearInterval(interval)
   }, [])
@@ -76,4 +83,3 @@ function MetricCard({ title, value }: { title: string; value: string | number })
     </div>
   )
 }
-
