@@ -2,20 +2,26 @@
 
 import { useState, useEffect, useCallback } from "react"
 
+export enum WebSocketStatus {
+  CONNECTING = 0,
+  CONNECTED = 1,
+  DISCONNECTED = 2,
+}
+
 export function useWebSocket(url: string) {
   const [socket, setSocket] = useState<WebSocket | null>(null)
-  const [isConnected, setIsConnected] = useState(false)
+  const [status, setStatus] = useState<WebSocketStatus>(WebSocketStatus.CONNECTING)
   const [lastMessage, setLastMessage] = useState<any>(null)
 
   useEffect(() => {
     const ws = new WebSocket(url)
 
     ws.onopen = () => {
-      setIsConnected(true)
+      setStatus(WebSocketStatus.CONNECTED)
     }
 
     ws.onclose = () => {
-      setIsConnected(false)
+      setStatus(WebSocketStatus.DISCONNECTED)
     }
 
     ws.onmessage = (event) => {
@@ -31,13 +37,13 @@ export function useWebSocket(url: string) {
 
   const sendMessage = useCallback(
     (message: any) => {
-      if (socket && isConnected) {
+      if (socket && status === WebSocketStatus.CONNECTED) {
         socket.send(JSON.stringify(message))
       }
     },
-    [socket, isConnected],
+    [socket, status],
   )
 
-  return { isConnected, lastMessage, sendMessage }
+  return { status, lastMessage, sendMessage }
 }
 

@@ -1,5 +1,10 @@
 import { createOpenAICompatible } from "@ai-sdk/openai-compatible"
 import { generateText } from "ai"
+import { NextResponse } from "next/server"
+
+interface RequestBody {
+  query: string
+}
 
 const perplexity = createOpenAICompatible({
   name: "perplexity",
@@ -9,50 +14,35 @@ const perplexity = createOpenAICompatible({
 
 export async function POST(req: Request) {
   try {
-    const { query } = await req.json()
-
-    if (!query) {
-      return new Response(
-        JSON.stringify({
-          error: "Query is required",
-        }),
-        {
-          status: 400,
-          headers: { "Content-Type": "application/json" },
-        },
-      )
+    if (!process.env.PERPLEXITY_API_KEY) {
+      return NextResponse.json({ error: "API key is not configured" }, { status: 500 })
     }
 
-    if (!process.env.PERPLEXITY_API_KEY) {
-      throw new Error("PERPLEXITY_API_KEY is not set")
+    const body = (await req.json()) as RequestBody
+
+    if (!body.query) {
+      return NextResponse.json({ error: "Query is required" }, { status: 400 })
     }
 
     const { text } = await generateText({
       model: perplexity("llama-3.1-sonar-small-128k-online"),
-      prompt: `You are a medical AI assistant. Provide helpful and accurate information about symptoms, first aid, and general medical advice. If the situation seems serious, always recommend seeking professional medical help. 
+      prompt: `You are a military command AI assistant. Provide clear, concise, and tactical responses to mission-related queries. Always prioritize operational security and safety.
 
-Query: ${query}
+Query: ${body.query}
 
 Response:`,
     })
 
     if (!text) {
-      throw new Error("No response generated")
+      return NextResponse.json({ error: "No response generated" }, { status: 500 })
     }
 
-    return new Response(JSON.stringify({ result: text }), {
-      headers: { "Content-Type": "application/json" },
-    })
+    return NextResponse.json({ result: text })
   } catch (error) {
     console.error("Perplexity API Error:", error)
-    return new Response(
-      JSON.stringify({
-        error: error instanceof Error ? error.message : "An unexpected error occurred",
-      }),
-      {
-        status: 500,
-        headers: { "Content-Type": "application/json" },
-      },
+    return NextResponse.json(
+      { error: error instanceof Error ? error.message : "An unexpected error occurred while processing your request" },
+      { status: 500 },
     )
   }
 }
