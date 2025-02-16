@@ -1,0 +1,135 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 220 20% 10%;
+    --foreground: 220 20% 90%;
+
+    --card: 220 20% 15%;
+    --card-foreground: 220 20% 90%;
+
+    --popover: 220 20% 10%;
+    --popover-foreground: 220 20% 90%;
+
+    --primary: 210 100% 30%;
+    --primary-foreground: 220 20% 90%;
+
+    --secondary: 150 30% 20%;
+    --secondary-foreground: 220 20% 90%;
+
+    --muted: 220 20% 20%;
+    --muted-foreground: 220 20% 70%;
+
+    --accent: 150 30% 30%;
+    --accent-foreground: 220 20% 90%;
+
+    --destructive: 0 100% 40%;
+    --destructive-foreground: 220 20% 90%;
+
+    --border: 220 20% 20%;
+    --input: 220 20% 20%;
+    --ring: 210 100% 30%;
+
+    --radius: 0.5rem;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+/* Military-style UI enhancements */
+.military-btn {
+  @apply font-bold py-2 px-4 rounded transition-colors duration-200;
+}
+
+.military-btn-primary {
+  @apply bg-primary text-primary-foreground hover:bg-primary/90;
+}
+
+.military-btn-secondary {
+  @apply bg-secondary text-secondary-foreground hover:bg-secondary/90;
+}
+
+.military-btn-danger {
+  @apply bg-destructive text-destructive-foreground hover:bg-destructive/90;
+}
+
+.military-alert {
+  @apply border-l-4 p-4 mb-4;
+}
+
+.military-alert-info {
+  @apply bg-primary/20 border-primary;
+}
+
+.military-alert-warning {
+  @apply bg-yellow-900/20 border-yellow-600;
+}
+
+.military-alert-danger {
+  @apply bg-destructive/20 border-destructive;
+}
+
+.military-alert-success {
+  @apply bg-green-900/20 border-green-600;
+}
+
+/* High contrast adjustments */
+.text-high-contrast {
+  @apply text-gray-100;
+}
+
+.bg-high-contrast {
+  @apply bg-gray-900;
+}
+
+/* Responsive design */
+@media (max-width: 640px) {
+  .responsive-grid {
+    @apply grid-cols-1;
+  }
+}
+
+.formatted-response h1,
+.formatted-response h2,
+.formatted-response h3 {
+  @apply font-bold mt-4 mb-2;
+}
+
+.formatted-response h1 {
+  @apply text-xl;
+}
+
+.formatted-response h2 {
+  @apply text-lg;
+}
+
+.formatted-response h3 {
+  @apply text-base;
+}
+
+.formatted-response ul,
+.formatted-response ol {
+  @apply ml-6 my-2;
+}
+
+.formatted-response li {
+  @apply mb-1;
+}
+
+.formatted-response p {
+  @apply mb-2;
+}
+
+.formatted-response code {
+  @apply bg-gray-100 dark:bg-gray-800 rounded px-1;
+}
+
